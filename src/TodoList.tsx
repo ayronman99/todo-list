@@ -1,34 +1,28 @@
 import { Paper, List, Divider } from "@mui/material";
-import { ReactElement, useContext } from "react";
-import { TodoShape } from "./@types/todos";
-import { TodosContext  } from "./context/todos.context";
+import { useContext } from "react";
+import type { TodoShape } from "./@types/todos";
+import { TodosContext } from "./context/todos.context";
 import Todo from "./Todo";
 
-
 function TodoList() {
-
   const todoState = useContext(TodosContext) as TodoShape[];
 
-  if (todoState.length >= 1)
-  {
+  if (todoState.length >= 1) {
     return (
       <Paper>
         <List>
           {todoState.map((todoItems: TodoShape, index) => (
             <>
-              <Todo
-                {...todoItems}
-                key={todoItems.id}
-              />
-              {index < todoState.length - 1 && <Divider key={todoItems.id + index} />}
+              <Todo {...todoItems} key={todoItems.id} />
+              {index < todoState.length - 1 && (
+                <Divider key={todoItems.id + index} />
+              )}
             </>
           ))}
         </List>
       </Paper>
     );
-  }
-  else
-  {
+  } else {
     return (
       <Paper>
         <section className="hero">
@@ -38,7 +32,7 @@ function TodoList() {
           </div>
         </section>
       </Paper>
-    )
+    );
   }
 }
 

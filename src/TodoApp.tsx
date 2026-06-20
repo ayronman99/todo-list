@@ -1,4 +1,3 @@
-import React from "react";
 import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
 import { Typography, Paper, AppBar, Grid } from "@mui/material";
@@ -6,7 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import { TodosContextProvider } from "./context/todos.context";
 
 function TodoApp() {
-
   return (
     <Paper
       style={{

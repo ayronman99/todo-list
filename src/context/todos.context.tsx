@@ -1,6 +1,7 @@
-import { createContext, PropsWithChildren, useEffect, useReducer } from "react";
+import { createContext } from "react";
+import type { PropsWithChildren } from "react";
 import todoReducer from "../reducers/todo.reducer";
-import { dispatcherHandler, TodoActionObjectType, TodoShape } from "../@types/todos";
+import type { dispatcherHandler, TodoActionObjectType, TodoShape } from "../@types/todos";
 import useLocalStorageStateReducer from "../reducers/useLocalStorageReducer";
 
 const defaultInitValues = [{ id: "id1", task: "default task", completed: false }];
