@@ -12,12 +12,12 @@ function TodoList() {
       <Paper>
         <List>
           {todoState.map((todoItems: TodoShape, index) => (
-            <>
+            <div key={todoItems.id}>
               <Todo {...todoItems} key={todoItems.id} />
               {index < todoState.length - 1 && (
                 <Divider key={todoItems.id + index} />
               )}
-            </>
+            </div>
           ))}
         </List>
       </Paper>
