@@ -3,6 +3,7 @@ import TodoForm from "./TodoForm";
 import { Typography, Paper, AppBar, Grid } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import { TodosContextProvider } from "./context/todos.context";
+import { APP_VERSION } from "./version";
 
 function TodoApp() {
   return (
@@ -33,6 +34,7 @@ function TodoApp() {
           </TodosContextProvider>
         </Grid>
       </Grid>
+      <footer>Version: {APP_VERSION}</footer>
     </Paper>
   );
 }
