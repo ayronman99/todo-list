@@ -1,8 +1,9 @@
-name: Deploy Release
+name: Release Deploy
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
@@ -14,11 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,12 +28,12 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install
+      - name: Install dependencies
         run: npm ci
 
-      - name: Create version file
+      - name: Inject version
         run: |
-          echo "export const APP_VERSION = '${{ github.event.release.tag_name }}';" > src/version.ts
+          echo "export const APP_VERSION = '${GITHUB_REF_NAME}';" > src/version.ts
 
       - name: Build
         run: npm run build
@@ -44,11 +41,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
-      - name: Deploy
-        id: deployment
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
