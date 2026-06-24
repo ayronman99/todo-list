@@ -25,7 +25,7 @@ function TodoApp() {
         container
         justifyContent="center"
         spacing={0.5}
-        style={{ marginTop: "1.5rem" }}
+        style={{ marginTop: "1.5rem", paddingBottom: "3rem" }}
       >
         <Grid item xs={11} md={8} lg={4}>
           <TodosContextProvider>
@@ -34,7 +34,17 @@ function TodoApp() {
           </TodosContextProvider>
         </Grid>
       </Grid>
-      <footer>Version: {APP_VERSION}</footer>
+      <AppBar
+        component="footer"
+        position="fixed"
+        color="inherit"
+        elevation={1}
+        style={{ top: "auto", bottom: 0 }}
+      >
+        <Toolbar style={{ justifyContent: "center", minHeight: "40px" }}>
+          <Typography variant="body2">Version: {APP_VERSION}</Typography>
+        </Toolbar>
+      </AppBar>
     </Paper>
   );
 }
