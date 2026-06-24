@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-
+import { MAX_CHAR_ERROR_MSG } from "../constant";
 type InputState = [
   string,
   string,
@@ -40,9 +40,7 @@ export default (initialVal: string, maxLength?: number): InputState => {
       return;
     }
     if (maxLength !== undefined && nextValue.length === maxLength) {
-      setError(
-        `You have reached the maximum length of ${maxLength} characters`,
-      );
+      setError(MAX_CHAR_ERROR_MSG);
       return;
     }
     setError("");

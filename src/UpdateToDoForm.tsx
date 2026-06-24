@@ -8,7 +8,8 @@ import Button from "@mui/material/Button";
 import useInputState from "./hooks/useInputState";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
-import { MAX_CHAR } from "./constant";
+import { MAX_CHAR, MAX_CHAR_ERROR_MSG } from "./constant";
+import { Typography } from "@mui/material";
 
 function UpdateToDoForm(props: {
   id: string;
@@ -32,11 +33,13 @@ function UpdateToDoForm(props: {
     toggleStateEditForm();
   };
 
+  const CHAR_LEN_CHECK = charCount >= MAX_CHAR ? MAX_CHAR_ERROR_MSG : "";
+
   return (
     <form
       onSubmit={handleSubmit}
       style={{ width: "100%" }}
-      className="is-flex is-justify-content-space-between"
+      className="flex justify-between"
     >
       <div style={{ width: "100%" }}>
         <TextField
@@ -46,11 +49,13 @@ function UpdateToDoForm(props: {
           fullWidth
           inputProps={{ maxLength: MAX_CHAR }}
         />
-        <div className="is-flex is-justify-content-space-between">
-          <span style={{ color: errorMsg ? "red" : "inherit" }}>
-            {errorMsg}
-          </span>
-          <span>{`${charCount}/${MAX_CHAR}`}</span>
+        <div className="flex justify-between">
+          <Typography component="span" variant="body2" sx={{ color: "red" }}>
+            {errorMsg || CHAR_LEN_CHECK}
+          </Typography>
+          <Typography component="span" variant="body2" color="textSecondary">
+            {`${charCount}/${MAX_CHAR}`}
+          </Typography>
         </div>
       </div>
       <Button type="submit" disabled={!value.trim()}>
