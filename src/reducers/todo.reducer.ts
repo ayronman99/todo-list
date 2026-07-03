@@ -9,7 +9,11 @@ const todoReducer = (
     case "ADD":
       return [
         ...todoState,
-        { id: uuid(), task: action.task, completed: false },
+        {
+          id: action.id ?? uuid(),
+          task: action.task ?? "",
+          completed: action.completed ?? false,
+        },
       ];
     case "REMOVE":
       return todoState.filter((todo: TodoShape) => todo.id !== action.id);
@@ -19,8 +23,25 @@ const todoReducer = (
       );
     case "UPDATE":
       return todoState.map((todo: TodoShape) =>
-        todo.id === action.id ? { ...todo, task: action.newTask } : todo,
+        todo.id === action.id
+          ? { ...todo, task: action.newTask ?? todo.task }
+          : todo,
       );
+    case "RESTORE": {
+      const restoredTodo: TodoShape = {
+        id: action.id ?? uuid(),
+        task: action.task ?? "",
+        completed: action.completed ?? false,
+      };
+      if (typeof action.index === "number" && action.index >= 0) {
+        return [
+          ...todoState.slice(0, action.index),
+          restoredTodo,
+          ...todoState.slice(action.index),
+        ];
+      }
+      return [...todoState, restoredTodo];
+    }
     default:
       return todoState;
   }

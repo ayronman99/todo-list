@@ -25,11 +25,16 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 
-function Todo(props: TodoShape): ReactElement {
+function Todo(
+  props: TodoShape & {
+    index: number;
+    onDelete: (todo: TodoShape, index: number) => void;
+  },
+): ReactElement {
   const dispatchTodos = useContext(
     DispatcherContext,
   ) as dispatcherHandler<TodoActionObjectType>;
-  const { task, id, completed } = props;
+  const { task, id, completed, index, onDelete } = props;
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -39,7 +44,7 @@ function Todo(props: TodoShape): ReactElement {
   };
 
   const confirmDeleteHandler = () => {
-    dispatchTodos({ type: "REMOVE", id: id });
+    onDelete({ id, task, completed }, index);
     setIsDeleteDialogOpen(false);
   };
 
