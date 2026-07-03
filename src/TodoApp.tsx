@@ -18,7 +18,7 @@ function TodoApp() {
     >
       <AppBar color="primary" position="static" style={{ height: "65px" }}>
         <Toolbar>
-          <Typography color="#fff">TODOS WITH HOOKS</Typography>
+          <Typography color="#fff">TaskHub</Typography>
         </Toolbar>
       </AppBar>
       <Grid
