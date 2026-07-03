@@ -17,18 +17,39 @@ import {
   Button,
   Typography,
   Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 
-function Todo(props: TodoShape): ReactElement {
+function Todo(
+  props: TodoShape & {
+    index: number;
+    onDelete: (todo: TodoShape, index: number) => void;
+  },
+): ReactElement {
   const dispatchTodos = useContext(
     DispatcherContext,
   ) as dispatcherHandler<TodoActionObjectType>;
-  const { task, id, completed } = props;
+  const { task, id, completed, index, onDelete } = props;
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const deleteTodoHandler = (evt: SyntheticEvent) => {
     evt.stopPropagation();
-    dispatchTodos({ type: "REMOVE", id: id });
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteHandler = () => {
+    onDelete({ id, task, completed }, index);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const closeDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   const toggleTodoHandler = (evt: SyntheticEvent) => {
@@ -102,6 +123,24 @@ function Todo(props: TodoShape): ReactElement {
           </Box>
         </>
       )}
+      <Dialog open={isDeleteDialogOpen} onClose={closeDeleteDialog}>
+        <DialogTitle>Delete this task?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This action will permanently remove the task from your list.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog}>Cancel</Button>
+          <Button
+            onClick={confirmDeleteHandler}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ListItem>
   );
 }
