@@ -1,4 +1,4 @@
-import { Paper, List, Divider, Snackbar, Button, Alert } from "@mui/material";
+import { Paper, List, Snackbar, Button, Alert } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import type {
   TodoShape,
@@ -6,10 +6,15 @@ import type {
   TodoActionObjectType,
 } from "./@types/todos";
 import { TodosContext, DispatcherContext } from "./context/todos.context";
-import Todo from "./Todo";
+import SortableTodo from "./components/SortableTodo";
+import { DragDropProvider } from "@dnd-kit/react";
+import { move } from "@dnd-kit/helpers";
 
 function TodoList() {
   const todoState = useContext(TodosContext) as TodoShape[];
+  const todoStateLength = todoState?.length ?? 0;
+  const [_tasks, setTasks] = useState(todoState ?? []);
+
   const dispatchTodos = useContext(
     DispatcherContext,
   ) as dispatcherHandler<TodoActionObjectType>;
@@ -26,6 +31,7 @@ function TodoList() {
     setLastDeleted({ todo, index });
     setTimeLeft(autoHideDuration);
     setSnackbarOpen(true);
+    setTasks((prevTasks) => prevTasks.filter((t) => t.id !== todo.id));
   };
 
   const handleUndo = () => {
@@ -55,6 +61,10 @@ function TodoList() {
     setLastDeleted(null);
   };
 
+  const handleItemUpdate = (updatedTodo: TodoShape[]) => {
+    dispatchTodos({ type: "REORDER", newOrder: updatedTodo });
+  };
+
   useEffect(() => {
     if (!snackbarOpen) {
       return;
@@ -70,20 +80,44 @@ function TodoList() {
     };
   }, [snackbarOpen]);
 
+  useEffect(() => {
+    setTasks(todoState ?? []);
+  }, [todoState, setTasks]);
+
   const content =
-    todoState.length >= 1 ? (
-      <Paper>
-        <List>
-          {todoState.map((todoItems: TodoShape, index) => (
-            <div key={todoItems.id}>
-              <Todo {...todoItems} index={index} onDelete={handleDelete} />
-              {index < todoState.length - 1 && (
-                <Divider key={todoItems.id + index} />
-              )}
-            </div>
-          ))}
-        </List>
-      </Paper>
+    todoStateLength >= 1 ? (
+      <DragDropProvider
+        onDragEnd={(event) => {
+          if (event.canceled) {
+            // Reset to server state on cancel
+            setTasks(todoState ?? []);
+            return;
+          }
+
+          // Update local state, then sync with server
+          setTasks((items) => {
+            const itemMove = move(items, event);
+            handleItemUpdate(itemMove);
+
+            return itemMove;
+          });
+        }}
+      >
+        <Paper>
+          <List>
+            {todoState.map((todoItems: TodoShape, index) => (
+              <SortableTodo
+                todoItems={todoItems}
+                id={todoItems.id}
+                key={todoItems.id}
+                index={index}
+                todoStateLength={todoStateLength}
+                onDelete={handleDelete}
+              />
+            ))}
+          </List>
+        </Paper>
+      </DragDropProvider>
     ) : (
       <Paper>
         <section className="hero">

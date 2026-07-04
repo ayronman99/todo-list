@@ -42,6 +42,8 @@ const todoReducer = (
       }
       return [...todoState, restoredTodo];
     }
+    case "REORDER":
+      return action.newOrder ?? todoState;
     default:
       return todoState;
   }

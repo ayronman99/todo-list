@@ -13,12 +13,13 @@ export type useToDoProps = {
 };
 
 export interface TodoActionObjectType {
-  type: "ADD" | "REMOVE" | "TOGGLE" | "UPDATE" | "RESTORE";
+  type: "ADD" | "REMOVE" | "TOGGLE" | "UPDATE" | "RESTORE" | "REORDER";
   id?: string;
   task?: string;
   newTask?: string;
   completed?: boolean;
   index?: number;
+  newOrder?: TodoShape[];
 }
 
 export type dispatcherHandler<T> = React.Dispatch<Partial<T>>;
